@@ -3,6 +3,7 @@ package csgoparser
 import "testing"
 
 func TestParsePosition(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input    string
 		expected Position

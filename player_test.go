@@ -3,6 +3,7 @@ package csgoparser
 import "testing"
 
 func TestParsePlayer(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input string
 		want  Player

@@ -6,6 +6,7 @@ import (
 )
 
 func TestTimestampParser(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input string
 		want  time.Time

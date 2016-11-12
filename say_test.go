@@ -3,6 +3,7 @@ package csgoparser
 import "testing"
 
 func TestParseSay(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		input    string
 		expected Props
