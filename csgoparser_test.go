@@ -1,9 +1,6 @@
 package csgoparser
 
-import (
-	"encoding/json"
-	"testing"
-)
+import "testing"
 
 func TestTokenizer(t *testing.T) {
 	tests := []struct {
@@ -36,12 +33,4 @@ func TestTokenizer(t *testing.T) {
 			t.Errorf("Expected timestamp: %v got %v", test.timestamp, ts)
 		}
 	}
-}
-
-func TestSayParse(t *testing.T) {
-	msg := "Hello"
-	res := SayParse(msg)
-	t.Log(res)
-	r, _ := json.Marshal(res)
-	t.Log(string(r))
 }

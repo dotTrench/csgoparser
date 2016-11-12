@@ -2,10 +2,12 @@ package csgoparser
 
 import "time"
 
+type Props map[string]interface{}
+
 type LogEvent struct {
 	Timestamp time.Time
 	EventType string
-	Props     map[string]interface{}
+	Props     Props
 }
 
 const (

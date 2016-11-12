@@ -17,7 +17,7 @@ func tokenize(line string) (string, string, error) {
 	return matches[1], matches[2], nil
 }
 
-type PropExtractorFunc func(string) map[string]interface{}
+type PropExtractorFunc func(string) (ok bool, props Props, err error)
 type PropertyExtractor struct {
 	eventName string
 	extractor PropExtractorFunc
@@ -31,25 +31,15 @@ func NewParser() CSGOLogParser {
 		extractors: []PropertyExtractor{
 			{
 				eventName: "say",
-				extractor: SayParse,
+				extractor: ParseSay,
 			},
 		},
 	}
 }
 
-func SayParse(line string) map[string]interface{} {
-	var m = make(map[string]interface{})
-	m["cock"] = 1
-	m["sender"] = Player{
-		UID:     13,
-		Name:    "lolöööö",
-		SteamID: "STEAM:01203213",
-	}
-	return m
-}
 func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 	var l LogEvent
-	timestamp, msg, err := tokenize(line)
+	timestamp, _, err := tokenize(line)
 	if err != nil {
 		return l, err
 	}
@@ -60,7 +50,7 @@ func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 	l.Timestamp = ts
 	for _, e := range p.extractors {
 		l.EventType = e.eventName
-		l.Props = e.extractor(msg)
+		//l.Props = e.extractor(msg)
 	}
 	return l, nil
 }
