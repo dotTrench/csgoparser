@@ -3,6 +3,9 @@ package csgoparser
 import (
 	"errors"
 	"regexp"
+	"time"
+
+	"github.com/dotTrench/csgoparser/parsers"
 )
 
 const ErrTokenizerNoMatch = "Tokenizer no match"
@@ -17,40 +20,48 @@ func tokenize(line string) (string, string, error) {
 	return matches[1], matches[2], nil
 }
 
-type PropExtractorFunc func(string) (ok bool, props Props, err error)
-type PropertyExtractor struct {
-	eventName string
-	extractor PropExtractorFunc
-}
 type CSGOLogParser struct {
-	extractors []PropertyExtractor
+	extractors []parsers.EventParser
 }
 
 func NewParser() CSGOLogParser {
 	return CSGOLogParser{
-		extractors: []PropertyExtractor{
+		extractors: []parsers.EventParser{
 			{
-				eventName: "say",
-				extractor: ParseSay,
+				EventName: "say",
+				Parser:    parsers.ParseSay,
 			},
 		},
 	}
 }
 
+type LogEvent struct {
+	Timestamp  time.Time
+	EventType  string
+	Properties parsers.Props
+}
+
 func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 	var l LogEvent
-	timestamp, _, err := tokenize(line)
+	timestamp, msg, err := tokenize(line)
 	if err != nil {
 		return l, err
 	}
-	ts, err := ParseTimeStamp(timestamp)
+	ts, err := parsers.ParseTimeStamp(timestamp)
 	if err != nil {
 		return l, err
 	}
 	l.Timestamp = ts
 	for _, e := range p.extractors {
-		l.EventType = e.eventName
-		//l.Props = e.extractor(msg)
+		ok, props, err := e.Parser(msg)
+		if err != nil {
+			return l, err
+		}
+		if !ok {
+			continue
+		}
+
+		l.Properties = props
 	}
 	return l, nil
 }

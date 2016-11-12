@@ -1,4 +1,4 @@
-package csgoparser
+package parsers
 
 import "time"
 

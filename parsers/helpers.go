@@ -1,7 +1,8 @@
-package csgoparser
+package parsers
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -36,13 +37,13 @@ func ParsePosition(input string) (Position, error) {
 
 var playerRegex = regexp.MustCompile(`^(.+)<(\d+)><(.+)><(.*)>$`)
 
-const ErrNoMatch = "No match"
+const ErrNoMatch = "Input %v did not match a player"
 
 func ParsePlayer(input string) (Player, error) {
 	var p Player
 	matches := playerRegex.FindStringSubmatch(input)
 	if matches == nil {
-		return p, errors.New(ErrNoMatch)
+		return p, errors.New(fmt.Sprintf(ErrNoMatch, input))
 	}
 
 	uid, err := strconv.Atoi(matches[2])

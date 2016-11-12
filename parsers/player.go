@@ -1,4 +1,4 @@
-package csgoparser
+package parsers
 
 type Player struct {
 	UID     int
