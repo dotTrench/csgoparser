@@ -27,15 +27,12 @@ func TestParseAssist(t *testing.T) {
 			},
 		},
 	}
-
+	parser := NewAssistParser()
 	for _, test := range tests {
-		ok, got, err := ParseAssist(test.input)
+		got, err := parser.Parse(test.input)
 
 		if err != nil {
 			t.Errorf("Got error: %v", err)
-		}
-		if !ok {
-			t.Error("Did not return OK")
 		}
 		want := test.expected
 		if got["killer"] != want["killer"] {

@@ -20,14 +20,11 @@ func TestParseDisconnected(t *testing.T) {
 			},
 		},
 	}
-
+	parser := NewDisconnectedParser()
 	for _, test := range tests {
-		ok, got, err := ParseDisconnected(test.input)
+		got, err := parser.Parse(test.input)
 		if err != nil {
 			t.Errorf("Got error: %v", err)
-		}
-		if !ok {
-			t.Error("Didnt get OK")
 		}
 		want := test.expected
 		if got["player"] != want["player"] {

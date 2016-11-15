@@ -66,14 +66,12 @@ func TestKillParse(t *testing.T) {
 			},
 		},
 	}
+	parser := NewKillParser()
 	for _, test := range tests {
-		ok, props, err := ParseKill(test.input)
+		props, err := parser.Parse(test.input)
 
 		if err != nil {
 			t.Errorf("Got error: %v", err)
-		}
-		if !ok {
-			t.Error("Didnt return OK")
 		}
 		if props == nil {
 			t.Error("Props were nil")

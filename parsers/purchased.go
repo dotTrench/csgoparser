@@ -2,22 +2,22 @@ package parsers
 
 import "regexp"
 
-var purchaseRegex = regexp.MustCompile(`^"(.+)"\spurchased\s"(.+)"$`)
+func matchPurchase(matches []string) (Props, error) {
 
-func ParsePurchase(input string) (bool, Props, error) {
-	var p Props
-	matches := purchaseRegex.FindStringSubmatch(input)
-
-	if matches == nil {
-		return false, p, nil
-	}
 	player, err := ParsePlayer(matches[1])
 	if err != nil {
-		return true, p, err
+		return nil, err
 	}
-	p = Props{
+	p := Props{
 		"player": player,
 		"weapon": matches[2],
 	}
-	return true, p, nil
+	return p, nil
+}
+
+func NewPurchasedParser() LogEventParser {
+	return &RegexEventParser{
+		regex:   regexp.MustCompile(`^"(.+)"\spurchased\s"(.+)"$`),
+		matcher: matchPurchase,
+	}
 }

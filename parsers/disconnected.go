@@ -2,24 +2,22 @@ package parsers
 
 import "regexp"
 
-var disconnectedRegex = regexp.MustCompile(`^"(.+)"\sdisconnected\s\(reason\s"(.+)"\)$`)
-
-func ParseDisconnected(input string) (bool, Props, error) {
-	var p Props
-	matches := disconnectedRegex.FindStringSubmatch(input)
-
-	if matches == nil {
-		return false, p, nil
+func NewDisconnectedParser() LogEventParser {
+	return &RegexEventParser{
+		regex:   regexp.MustCompile(`^"(.+)"\sdisconnected\s\(reason\s"(.+)"\)$`),
+		matcher: matchDisconnected,
 	}
+}
 
+func matchDisconnected(matches []string) (Props, error) {
 	player, err := ParsePlayer(matches[1])
 	if err != nil {
-		return true, p, err
+		return nil, err
 	}
-	p = Props{
+	p := Props{
 		"player": player,
 		"reason": matches[2],
 	}
 
-	return true, p, nil
+	return p, nil
 }

@@ -43,22 +43,22 @@ func TestParseSay(t *testing.T) {
 			},
 		},
 	}
-
+	parser := NewSayParser()
 	for _, test := range tests {
-		ok, props, err := ParseSay(test.input)
+		props, err := parser.Parse(test.input)
 
-		if !ok {
-			t.Errorf("Did not return OK")
+		if err != nil {
+			t.Errorf("Got error: %v", err)
 		}
 		if props == nil {
 			t.Errorf("Props were nil")
 		}
-		if err != nil {
-			t.Errorf("Got error: %v", err)
-		}
 
 		if props["sender"] != test.expected["sender"] {
 			t.Errorf("Sender - expected: %v got %v", test.expected["sender"], props["sender"])
+		}
+		if props["message"] != test.expected["message"] {
+			t.Errorf("Message - expected: %v got %v", test.expected["message"], props["message"])
 		}
 	}
 }

@@ -21,14 +21,11 @@ func TestParsePurchase(t *testing.T) {
 			},
 		},
 	}
-
+	parser := NewPurchasedParser()
 	for _, test := range tests {
-		ok, p, err := ParsePurchase(test.input)
+		p, err := parser.Parse(test.input)
 		if err != nil {
 			t.Errorf("Got error: %v", err)
-		}
-		if !ok {
-			t.Error("Did not get OK")
 		}
 		if p["player"] != test.expected["player"] {
 			t.Errorf("Player - expected %v got %v", test.expected["player"], p["player"])

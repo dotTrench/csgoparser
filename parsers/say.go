@@ -2,23 +2,24 @@ package parsers
 
 import "regexp"
 
-var sayRegex = regexp.MustCompile(`"(.+)"\ssay\s(.+)$`)
-
-func ParseSay(input string) (bool, Props, error) {
-	var p Props
-	matches := sayRegex.FindStringSubmatch(input)
-	if matches == nil {
-		return false, p, nil
-	}
+func matchSay(matches []string) (Props, error) {
 	player, err := ParsePlayer(matches[1])
 
 	if err != nil {
-		return false, p, err
+		return nil, err
 	}
 
-	p = Props{
+	p := Props{
 		"sender":  player,
 		"message": matches[2],
 	}
-	return true, p, nil
+
+	return p, nil
+}
+
+func NewSayParser() LogEventParser {
+	return &RegexEventParser{
+		regex:   regexp.MustCompile(`"(.+)"\ssay\s(.+)$`),
+		matcher: matchSay,
+	}
 }
