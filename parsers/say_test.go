@@ -20,7 +20,7 @@ func TestParseSay(t *testing.T) {
 				"message": "hello",
 			},
 		}, {
-			input: `"erik<2><STEAM_1:0:7399491><CT>" say testing "this""`,
+			input: `"erik<2><STEAM_1:0:7399491><CT>" say "testing "this""`,
 			expected: Props{
 				"sender": Player{
 					Name:    "erik",
