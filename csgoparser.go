@@ -2,6 +2,7 @@ package csgoparser
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 
 const ErrTokenizerNoMatch = "Tokenizer no match"
 
-var msgRegx = regexp.MustCompile(`L\s(.+):\s(.+)$`)
+var msgRegx = regexp.MustCompile(`L\s(.+?):\s(.+)$`)
 
 func tokenize(line string) (string, string, error) {
 	matches := msgRegx.FindStringSubmatch(line)
@@ -45,6 +46,7 @@ func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 		return l, err
 	}
 	l.Timestamp = ts
+	fmt.Println(len(p.eventParsers))
 	for _, e := range p.eventParsers {
 		props, err := e.parser.Parse(msg)
 		if err != nil {
@@ -53,6 +55,8 @@ func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 		if props == nil {
 			continue
 		}
+		l.EventType = e.eventName
+
 		l.Properties = props
 	}
 	return l, nil
@@ -63,6 +67,10 @@ func NewParser() CSGOLogParser {
 			{
 				eventName: "say",
 				parser:    parsers.NewSayParser(),
+			},
+			{
+				eventName: "kill",
+				parser:    parsers.NewKillParser(),
 			},
 		},
 	}

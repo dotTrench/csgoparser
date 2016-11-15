@@ -20,6 +20,11 @@ func TestTokenizer(t *testing.T) {
 			`11/10/2015 - 18:58:37`,
 			`"Adrian<3><BOT><CT>" [1264 2013 10] killed "Hank<11><BOT><TERRORIST>" [692 2328 68] with "m4a1"`,
 		},
+		{
+			`L 09/05/2015 - 19:13:45: rcon from "127.0.0.1:55679": command "status"`,
+			`09/05/2015 - 19:13:45`,
+			`rcon from "127.0.0.1:55679": command "status"`,
+		},
 	}
 
 	for _, test := range tests {
