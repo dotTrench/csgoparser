@@ -6,11 +6,6 @@ import (
 
 type Props map[string]interface{}
 
-type EventParserFunc func(string) (props Props, err error)
-type EventParser struct {
-	EventName string
-	Parser    EventParserFunc
-}
 type RegexpMatcherFunc func([]string) (Props, error)
 type RegexEventParser struct {
 	regex   *regexp.Regexp

@@ -20,8 +20,12 @@ func tokenize(line string) (string, string, error) {
 	return matches[1], matches[2], nil
 }
 
+type EventParser struct {
+	eventName string
+	parser    parsers.LogEventParser
+}
 type CSGOLogParser struct {
-	eventParsers []parsers.LogEventParser
+	eventParsers []EventParser
 }
 
 type LogEvent struct {
@@ -42,7 +46,7 @@ func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 	}
 	l.Timestamp = ts
 	for _, e := range p.eventParsers {
-		props, err := e.Parse(msg)
+		props, err := e.parser.Parse(msg)
 		if err != nil {
 			return l, err
 		}
@@ -52,4 +56,14 @@ func (p *CSGOLogParser) ParseLine(line string) (LogEvent, error) {
 		l.Properties = props
 	}
 	return l, nil
+}
+func NewParser() CSGOLogParser {
+	return CSGOLogParser{
+		eventParsers: []EventParser{
+			{
+				eventName: "say",
+				parser:    parsers.NewSayParser(),
+			},
+		},
+	}
 }
