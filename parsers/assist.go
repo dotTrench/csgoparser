@@ -21,7 +21,7 @@ func matchAssist(matches []string) (Props, error) {
 
 	return p, nil
 }
-func NewAssistParser() LogEventParser {
+func NewAssistParser() *RegexEventParser {
 	return &RegexEventParser{
 		regex:   regexp.MustCompile(`^"(.+)"\sassisted\skilling\s"(.+)"$`),
 		matcher: matchAssist,

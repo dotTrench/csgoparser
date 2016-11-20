@@ -15,7 +15,7 @@ func matchPurchase(matches []string) (Props, error) {
 	return p, nil
 }
 
-func NewPurchasedParser() LogEventParser {
+func NewPurchasedParser() *RegexEventParser {
 	return &RegexEventParser{
 		regex:   regexp.MustCompile(`^"(.+)"\spurchased\s"(.+)"$`),
 		matcher: matchPurchase,

@@ -17,7 +17,7 @@ func matchSay(matches []string) (Props, error) {
 	return p, nil
 }
 
-func NewSayParser() LogEventParser {
+func NewSayParser() *RegexEventParser {
 	return &RegexEventParser{
 		regex:   regexp.MustCompile(`^"(.+)"\ssay\s"(.+)"$`),
 		matcher: matchSay,
