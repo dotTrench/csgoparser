@@ -1,12 +1,18 @@
 package parsers
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 )
+
+type PositionParser interface {
+	Parse(input string) (Position, error)
+}
+type PlayerParser interface {
+	Parse(input string) (Player, error)
+}
 
 type Position struct {
 	x, y, z int
@@ -43,7 +49,7 @@ func ParsePlayer(input string) (Player, error) {
 	var p Player
 	matches := playerRegex.FindStringSubmatch(input)
 	if matches == nil {
-		return p, errors.New(fmt.Sprintf(ErrNoMatch, input))
+		return p, fmt.Errorf(ErrNoMatch, input)
 	}
 
 	uid, err := strconv.Atoi(matches[2])
